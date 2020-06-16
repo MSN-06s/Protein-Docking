@@ -4,9 +4,9 @@
 #Docking.sh should be in the same folder with z-dock and z-rank assembly
 #mod_num: number of models to be generated (from highest z-dock score to lowest)
 
-ligand=$1
+receptor=$1
 pdbs=$2
-mod_num=$3
+#mod_num=$3
 
 script_path=$(pwd)
 touch z_score.txt
@@ -20,7 +20,8 @@ do
     mkdir ${organism}
     mv ${pdbs}/${file} ${organism}
     mark_sur ${organism}/${organism}.pdb ${organism}/${organism}_m.pdb
-    zdock -R ${organism}/${organism}_m.pdb -L ${ligand} -o ${organism}/${organism}.out
+    #zdock -R ${organism}/${organism}_m.pdb -L ${ligand} -o ${organism}/${organism}.out
+    zdock -R ${receptor} -L ${organism}/${organism}_m.pdb -o ${organism}/${organism}.out
 #Docking
     cat ${organism}/${organism}.out|sed -n '6p'>first_line.txt
     Z_score=$(awk '{print $NF}' first_line.txt)
@@ -29,11 +30,11 @@ do
     end_time=$(date)
     echo "done processing ${file} at ${end_time}"  
 #Modelling
-    cd ${organism}
-    cp ${script_path}/create.pl ./
-    cp ${script_path}/create_lig ./
-    perl create.pl ${organism}/${organism}.out ${mod_num}
-    rm create*
-    cd ${script_path}
+    #cd ${organism}
+    #cp ${script_path}/create.pl ./
+    #cp ${script_path}/create_lig ./
+    #perl create.pl ${organism}/${organism}.out ${mod_num}
+    #rm create*
+    #cd ${script_path}
 done
 
